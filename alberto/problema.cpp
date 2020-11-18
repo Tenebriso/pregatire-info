@@ -1,56 +1,70 @@
+/*
+1. Soluția e un șir de poziții care inițial (la pasul 0) are doar poziția (0, 0).
+2. Creem funcția recursivă *back* care primește ca argument poziția curentă a șoricelului (i, j).
+3. Dacă poziția curentă == poziția destinație, afișăm soluția.
+4. Dacă nu, verificăm dacă putem să ne mutăm în jos (pe (i+1, j)). Dacă da, adăugăm (i+1, j) la soluție și apelăm *back(i+1, j).*
+5. Verificăm dacă putem să ne mutăm la dreapta (pe (i, j+1)). Dacă da, adăugăm (i, j+1) la soluție și apelăm *back(i, j+1)*.
+*/
+
 #include <iostream>
-using namespace std;
+#include <vector>
+#define n 3
 
-int n;
-int solutie[10][2];
-int labirint[10][10];
-void citire(){
-  int i,j;
-  for(i=0; i<n; i++)
-    for(j=0; j<n; j++)
-      cin >> labirint[i][j];
-}
-void afisare(){
-  int i;
-  for(i=0; i<2*n-1; i++)
-  cout <<"("<< solutie[i][0]<< ", "<<solutie[i][1]<<") ";
-}
-int cond(int jos, int dreapta){
-  if(jos >= n || dreapta >=n)
-    return 0;
-  if(labirint[jos][dreapta] == 1)
-    return 0;
-    return 1;
-  }
-void back(int k){
-  int i, j;
-  if(k == 0){
-  solutie[k][0]=0;
-  solutie[k][1]=0;
-  return;
-}
-  if(k < 2*n-1)
-  afisare();
-  else{
-        int jos_i=solutie[k][0]+1;
-        int jos_j=solutie[k][1];
-        int dreapta_i=solutie[k][0];
-        int dreapta_j=solutie[k][1]+1;
-        if(cond(jos_i,jos_j)){
-          solutie[k][0]=jos_i;
-          solutie[k][1]=jos_j;
-          back(k+1);
-          }
-          if(cond(dreapta_i, dreapta_j)){
-            solutie[k][0]=dreapta_i;
-            solutie[k][1]=dreapta_j;
-            back(k+1);
-          }
-      }
+void afisare(std::vector<std::pair<int, int> > solutie) {
+	for (int i = 0; i < solutie.size(); i++) {
+		std::cout << "(" << solutie[i].first << ", " << solutie[i].second << ") ";
+	}
+	std::cout << std::endl;
 }
 
-int main(){
-  cin>>n;
-  citire();
-  back(0);
+bool check(int i, int j, int maze[n][n]){
+	// sa nu iesim din maze
+	if (i >= n || i < 0 || j < 0 || j >= n) {
+		return false;
+	}
+	// sa nu fie zid
+	if (maze[i][j] == 1) {
+		return false;
+	}
+
+	return true;
+}
+
+void back(int i, int j, int maze[n][n], std::vector<std::pair<int, int> > &solutie) {
+	// pozitia destinatie este (n-1, n-1)
+	if (i == n - 1 && j == n - 1) {
+		afisare(solutie);
+		return;
+	}
+	// ne mutam jos cu o casuta
+	int jos_i = i + 1;
+	int jos_j = j;
+	if (check(jos_i, jos_j, maze)) {
+		// adaugam <jos> la solutie
+		solutie.push_back({jos_i, jos_j});
+		// calculam toate drumurile posibile care contin <jos>
+		back(jos_i, jos_j, maze, solutie);
+		// scoatem <jos> din solutie, pentru ca la pasul urmator, 
+		// cand ne mutam la dreapta, sa nu apara ca ne-am mutat si jos
+		solutie.pop_back();
+	}
+	
+	// ne mutam dreapta cu o casuta
+	int dreapta_i = i;
+	int dreapta_j = j + 1;
+	if (check(dreapta_i, dreapta_j, maze)) {
+		solutie.push_back({dreapta_i, dreapta_j});
+		back(dreapta_i, dreapta_j, maze, solutie);
+		solutie.pop_back();
+	}
+}
+
+int main() {
+	int maze[n][n] = {{0, 0, 0},
+			  {0, 1, 0},
+			  {1, 0, 0}};
+	std::vector<std::pair<int, int> > solutie;
+	solutie.push_back({0, 0});
+	back(0, 0, maze, solutie);
+	return 0;
 }
