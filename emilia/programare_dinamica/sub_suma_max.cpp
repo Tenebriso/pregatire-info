@@ -36,10 +36,8 @@ int suma_max(int n, int v[]) {
 // functie care afiseaza si subsecventa din care obtinem suma maxima
 void subsecventa_max(int n, int v[]) {
 	int dp[n];
-	int start[n]; // in start marcam elementele care fac parte din
-		      // subsecventa, daca pe mai multe pozitii e acelasi numar
-		      // inseamna ca elemenetle fac parte din subsecventa care
-		     // incepe la indicele cu numarul respectiv
+	int start[n]; // start[i] = pozitia pe care a inceput subsecventa care
+       	             // da solutia cu suma egala cu dp[i]
 
 	// caz de baza
 	dp[0] = v[0];
