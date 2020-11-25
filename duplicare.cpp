@@ -7,6 +7,7 @@ Pasul 4: Inversam numarul solutie
 */
 #include <iostream>
 using namespace std;
+
 int duplicare( int n, int d ){
   int solutie = 0, ok = 0;
   while( n != 0 ){
@@ -25,6 +26,7 @@ int duplicare( int n, int d ){
     d=-1;
   return d;
 }
+
 int main(){
   int n, d;
   cout << "Numarul este: "; cin >> n;
