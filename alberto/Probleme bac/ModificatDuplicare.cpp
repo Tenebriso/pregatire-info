@@ -26,7 +26,7 @@ int duplicare(int n, int d) {
     solutie /= 10;
   }
   if( ok == 0 )
-    d =-1 ;
+    return -1;
   if ( countzero == 10 ){
     return d;
   } else return d * countzero /10;
